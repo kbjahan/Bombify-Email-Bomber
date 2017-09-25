@@ -18,6 +18,6 @@ namespace Bombify_Email_Bomber
         public static int ThreadCount;
         public static bool OneTime = false;
         public static int LineCount;
-        public static MailMessage mail = new MailMessage();
+        public static MailMessage Mail = new MailMessage();
     }
 }
