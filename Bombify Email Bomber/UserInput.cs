@@ -45,7 +45,7 @@ namespace Bombify_Email_Bomber
             TryAgainMode:
 
             // Display text
-            Console.WriteLine("1. Normal mode\n2. Annoy mode\n3. Annoy mode with random sender(needs smtp server support)\nMode:");
+            Console.WriteLine("1. Normal mode\n2. Annoy mode\nMode:");
 
             try
             {
@@ -58,7 +58,7 @@ namespace Bombify_Email_Bomber
                 goto TryAgainMode;
             }
 
-            if (Variables.Mode > 3)
+            if (Variables.Mode > 2)
             {
                 ShowErrorMessage("ERROR: You may only choose the above options");
                 goto TryAgainMode;
@@ -107,15 +107,21 @@ namespace Bombify_Email_Bomber
                 TryAgainCustomSender:
 
                 // Get user input
-                Console.WriteLine("Choose custom sender\nSender:");
+                Console.WriteLine("Choose custom sender(leave empty for random sender)\nSender:");
                 Variables.Sender = Console.ReadLine();
 
-                // Check if email is valid
-                if (CheckEmailValidity(Variables.Sender) == false)
+                if (Variables.Sender == "")
                 {
-                    // Show error message
-                    ShowErrorMessage("ERROR: Invald email format");
-                    goto TryAgainCustomSender;
+                    Variables.Sender = "rand";
+                } else
+                {
+                    // Check if email is valid
+                    if (CheckEmailValidity(Variables.Sender) == false)
+                    {
+                        // Show error message
+                        ShowErrorMessage("ERROR: Invald email format");
+                        goto TryAgainCustomSender;
+                    }
                 }
             }
 
