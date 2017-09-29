@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Mail;
 
 namespace Bombify_Email_Bomber
 {
@@ -12,12 +11,10 @@ namespace Bombify_Email_Bomber
         public static string To;
         public static string Title;
         public static string Body;
-        public static string AttachmentPath;
         public static int Ssl;
         public static int Choose;
         public static int ThreadCount;
         public static bool OneTime = false;
         public static int LineCount;
-        public static MailMessage Mail = new MailMessage();
     }
 }

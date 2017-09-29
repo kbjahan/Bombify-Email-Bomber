@@ -190,49 +190,6 @@ namespace Bombify_Email_Bomber
             Console.Clear();
         }
 
-        // GetAttachmentInput method
-        public static void GetAttachmentInput()
-        {
-            AttachmentTryAgain:
-
-            // Display text 
-            Console.WriteLine("Attachment Path(leave empty if not needed)\nPath:");
-
-            // Get user input
-            Variables.AttachmentPath = Console.ReadLine();
-
-            // Check if user wants attachment or not
-            if (Variables.AttachmentPath == "")
-            {
-                // Dont add attachment
-                Variables.AttachmentPath = "None";
-            }
-            else
-            {
-                // Check if attachment exists
-                if (!File.Exists(Variables.AttachmentPath))
-                {
-                    // Show error message
-                    ShowErrorMessage("ERROR: Could not find file to attach, make sure the path spesifyed is correct");
-                    goto AttachmentTryAgain;
-                }
-
-                // Get file info(size)
-                FileInfo Fi = new FileInfo(Variables.AttachmentPath);
-                long FileSize = Fi.Length;
-
-                // Check if file size is greater than 2 MB
-                if (FileSize > 2126840)
-                {
-                    // Show error message
-                    ShowErrorMessage("ERROR: You may not use file sizes over 2 MB for attachments");
-                    goto AttachmentTryAgain;
-                }
-            }
-
-            Console.Clear();
-        }
-
         // GetSslInput method
         public static void GetSslInput()
         {
