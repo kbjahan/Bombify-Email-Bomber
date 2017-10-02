@@ -14,7 +14,6 @@ namespace Bombify_Email_Bomber
         public static int Ssl;
         public static int Choose;
         public static int ThreadCount;
-        public static bool OneTime = false;
         public static int LineCount;
     }
 }
