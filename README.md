@@ -1,5 +1,5 @@
 # Bombify-Email-Bomber
-A feature ritch email bomber with spoofer, attachment and more.
+A feature ritch email bomber with spoofer, multi smtp support and more.
 
 1. Compile it
 2. Run it
